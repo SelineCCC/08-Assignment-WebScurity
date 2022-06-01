@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from blogging.models import Post
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
     
 '''
@@ -21,7 +22,7 @@ class BlogListView(ListView):
     template_name = 'blogging/list.html'
 
 
-
+'''
 def detail_view(request, post_id):
     published = Post.objects.exclude(published_date__exact=None)
     try:
@@ -30,4 +31,13 @@ def detail_view(request, post_id):
         raise Http404
     context = {'post': post}
     return render(request, 'blogging/detail.html', context)
+'''
 
+class BlogDetailView(DetailView):
+    model = Post
+    template_name = 'blogging/detail.html'
+
+    def post(self, request, *args, **kwargs):
+        post = self.get_object().exclude(published_date__exact=None)
+        context = {'object': post}
+        return render(request, 'blogging/detail.html', context)
