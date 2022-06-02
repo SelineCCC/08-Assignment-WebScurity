@@ -18,7 +18,7 @@ def list_view(request):
 '''
 
 class BlogListView(ListView):
-    model = Post
+    queryset = Post.objects.exclude(published_date__exact=None).order_by('-published_date')
     template_name = 'blogging/list.html'
 
 
@@ -34,10 +34,9 @@ def detail_view(request, post_id):
 '''
 
 class BlogDetailView(DetailView):
-    model = Post
+    queryset = Post.objects.exclude(published_date__exact=None)
     template_name = 'blogging/detail.html'
 
-    def post(self, request, *args, **kwargs):
-        post = self.get_object().exclude(published_date__exact=None)
-        context = {'object': post}
-        return render(request, 'blogging/detail.html', context)
+    # def get_queryset(self, request, *args, **kwargs):
+    #     context = {'object': queryset}
+    #     return render(request, 'blogging/detail.html', context)
